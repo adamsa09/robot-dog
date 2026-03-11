@@ -2102,7 +2102,7 @@
 				(justify right)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x06_P2.54mm_Vertical"
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Horizontal"
 			(at 180.34 72.39 0)
 			(effects
 				(font
@@ -2183,7 +2183,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x19_P2.54mm_Vertical"
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
 			(at 123.19 82.55 0)
 			(effects
 				(font
@@ -2301,7 +2301,7 @@
 				)
 			)
 		)
-		(property "Footprint" "Connector_PinHeader_2.54mm:PinHeader_1x19_P2.54mm_Vertical"
+		(property "Footprint" "Connector_PinSocket_2.54mm:PinSocket_1x19_P2.54mm_Vertical"
 			(at 135.89 82.55 0)
 			(effects
 				(font
@@ -2556,7 +2556,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Altech:Altech_AK100_1x02_P5.00mm"
+		(property "Footprint" "TerminalBlock:TerminalBlock_MaiXu_MX126-5.0-02P_1x02_P5.00mm"
 			(at 180.34 88.9 0)
 			(effects
 				(font
@@ -2827,7 +2827,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "TerminalBlock_Altech:Altech_AK100_1x02_P5.00mm"
+		(property "Footprint" "TerminalBlock:TerminalBlock_MaiXu_MX126-5.0-02P_1x02_P5.00mm"
 			(at 180.34 100.33 0)
 			(effects
 				(font
