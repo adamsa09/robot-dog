@@ -3,6 +3,9 @@
 #include <Wire.h>
 #include <math.h>
 
+const float HOME_X = 31.746;
+const float HOME_Z = 60.599;
+
 const float L1 = 115.707f;
 const float L2 = 115.000f;
 
@@ -13,8 +16,14 @@ static const int SERVO_US_MAX = 2930;
 static const int EASE_SPEED_DPS = 60;
 static const int NUM_CHANNELS = 16;
 
+
+// RED
 static const float HIP_SERVO_CALIB_SLOPE = 0.7784726794;
 static const float HIP_SERVO_CALIB_INTERCEPT = 7.656682028;
+
+// BLUE
+static const float KNEE_SERVO_CALIB_SLOPE = 0.8825572;
+static const float KNEE_SERVO_CALIB_INTERCEPT = 1.600947;
 
 ServoEasing* servos[NUM_CHANNELS];
 bool attached[NUM_CHANNELS];
@@ -41,9 +50,9 @@ void ensureAttached(uint8_t ch) {
 void IK(float x, float z, float* theta2, float* theta3) {
   float L12 = sqrtf(x * x + z * z);
 
-  float theta12 = acos((L1*L1 + L2*L2 - L12*L12) / (2 * L1 * L2));
+  float theta12 = acos((L1 * L1 + L2 * L2 - L12 * L12) / (2 * L1 * L2));
 
-  *theta3 = 180 - degrees(theta12);
+  *theta3 = KNEE_SERVO_CALIB_SLOPE * (180 - degrees(theta12)) + KNEE_SERVO_CALIB_INTERCEPT;
 
   float alpha1 = atan(x / z);
 
@@ -73,18 +82,23 @@ void handleSerial() {
   while (Serial.available() > 0) {
     char c = (char)Serial.read();
 
+    // Too many nested if statements. fix.
     if (c == '\n' || c == '\r') {
       inputLine.trim();
       if (inputLine.length() > 0) {
         int commaIdx = inputLine.indexOf(',');
-        if (commaIdx < 0) {
+        if (commaIdx < 0 && inputLine != "home" || inputLine != "zero") {
           Serial.println("Format: x,z");
         } else {
-          float x = inputLine.substring(0, commaIdx).toFloat();
-          float z = inputLine.substring(commaIdx + 1).toFloat();
-
           float theta2, theta3;
-          IK(x, z, &theta2, &theta3);
+          if (inputLine == "home") {
+            IK(HOME_X, HOME_Z, &theta2, &theta3);
+          } else {
+            float x = inputLine.substring(0, commaIdx).toFloat();
+            float z = inputLine.substring(commaIdx + 1).toFloat();
+
+            IK(x, z, &theta2, &theta3);
+          }
 
           if (isnan(theta2) || isnan(theta3)) {
             Serial.println("Invalid.");
@@ -95,7 +109,7 @@ void handleSerial() {
             ensureAttached(0);
             ensureAttached(1);
 
-            int hipTargetApi  = physToApi((int)hipServo);
+            int hipTargetApi = physToApi((int)hipServo);
             int kneeTargetApi = physToApi((int)kneeServo);
 
             ServoEasing::ServoEasingArray[0]->setEaseTo(hipTargetApi);

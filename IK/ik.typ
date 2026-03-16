@@ -1,5 +1,5 @@
 #align(center)[
-    = Inverse Kinematics
+    = Quadrupedal Robot Dog
 
     #v(2cm)
 
@@ -10,6 +10,8 @@
 ]
 
 #pagebreak()
+
+== Inverse Kinematics
 
 Solving for $theta_{2}$ and $theta_{3}$ when $(x, z)$ is known
 
@@ -36,3 +38,8 @@ $gamma_1 = sin^(-1)(frac(sin theta_12 times L_2, L_12))$ #h(1fr) Law of sines
 
 6. Solve for $theta_2$
 $theta_2 = 90 - (alpha_1 + gamma_1)$ #h(1fr) Complementary angles
+
+#pagebreak()
+== Gait
+Set of angles
+
