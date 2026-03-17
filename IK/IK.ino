@@ -87,7 +87,7 @@ void handleSerial() {
       inputLine.trim();
       if (inputLine.length() > 0) {
         int commaIdx = inputLine.indexOf(',');
-        if (commaIdx < 0 && inputLine != "home" || inputLine != "zero") {
+        if (commaIdx < 0 || inputLine != "home") {
           Serial.println("Format: x,z");
         } else {
           float theta2, theta3;
