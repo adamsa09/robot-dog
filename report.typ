@@ -2,8 +2,6 @@
     = Quadruped Robot Dog
     == Adam Sarhan & Lucas Dauth
     #v(2cm)
-
-
 ]
 
 #pagebreak()
@@ -15,17 +13,17 @@
     )
 Solving for $theta_2$ and $theta_3$ when $(x, z)$ is known
 
-#v(3mm)
+#v(0.5mm)
 
 1. $L_23$
 $L_23 = sqrt(x^2 + z^2)$ #h(1fr) Pythagorean theorem
 
-#v(3mm)
+#v(0.5mm)
 
 2. $theta_23$
 $theta_23 = cos^(-1)(frac(L_2^2 + L_3^2 - L_23^2, 2 times L_1 times L_3))$ #h(1fr) Law of cosines
 
-#v(3mm)
+#v(0.5mm)
 
 3. $theta_3$
 $theta_3 = 180 - theta_23$ #h(1fr) Supplementary angles
@@ -39,8 +37,12 @@ $gamma_1 = sin^(-1)(frac(sin theta_23 times L_3, L_23))$ #h(1fr) Law of sines
 6. $theta_2$
 $theta_2 = 90 - (alpha_1 + gamma_1)$ #h(1fr) Complementary angles\
 \ 
-$theta_2$ is written to the hip joint servo\ 
-$theta_3$ is written to the knee joint servo
+
+*Direct drive*:
+$theta_2→"hip servo"$, $theta_3→"knee servo"$
+
+*4-bar parallelogram*:
+$theta_2→"hip servo"$, $theta_2 + theta_23 - 180°→"knee servo"$
 
 #pagebreak()
 == Gait
