@@ -1,14 +1,8 @@
 #define USE_PCA9685_SERVO_EXPANDER
 #include <ServoEasing.hpp>
 #include <Wire.h>
-
-// ─── Config ──────────────────────────────────────────────────────────────────
-static const int I2C_SDA        = 21;
-static const int I2C_SCL        = 22;
-static const int SERVO_US_MIN   = 537;   // SERVO_MIN=110 counts @ 50 Hz → 537 µs
-static const int SERVO_US_MAX   = 2930;  // SERVO_MAX=600 counts @ 50 Hz → 2930 µs
-static const int EASE_SPEED_DPS = 60;    // degrees/sec (0–180 API scale)
-static const int NUM_CHANNELS   = 16;
+#include <Arduino.h>
+#include "config.h"
 
 // ─── One ServoEasing instance per channel, lazily attached ───────────────────
 ServoEasing* servos[NUM_CHANNELS];

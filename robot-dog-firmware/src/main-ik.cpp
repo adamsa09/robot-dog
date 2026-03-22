@@ -1,29 +1,21 @@
+/*
+IK TEST FILE
+TESTS THE FRONT RIGHT LEG ONLY
+ACCEPTS COORDINATES IN THE FORMAT "x,z" (WITHOUT QUOTES) OVER SERIAL
+*/
+
+
 #define USE_PCA9685_SERVO_EXPANDER
 #include <ServoEasing.hpp>
 #include <Wire.h>
 #include <math.h>
+#include <Arduino.h>
+#include "config.h"
+#include "Calibration.h"
+#include "IK.h"
 
 const float HOME_X = 31.746;
 const float HOME_Z = 60.599;
-
-const float L1 = 115.707f;
-const float L2 = 115.000f;
-
-static const int I2C_SDA = 21;
-static const int I2C_SCL = 22;
-static const int SERVO_US_MIN = 537;
-static const int SERVO_US_MAX = 2930;
-static const int EASE_SPEED_DPS = 60;
-static const int NUM_CHANNELS = 16;
-
-
-// RED
-static const float HIP_SERVO_CALIB_SLOPE = 0.7784726794;
-static const float HIP_SERVO_CALIB_INTERCEPT = 7.656682028;
-
-// BLUE
-static const float KNEE_SERVO_CALIB_SLOPE = 0.8825572;
-static const float KNEE_SERVO_CALIB_INTERCEPT = 1.600947;
 
 ServoEasing* servos[NUM_CHANNELS];
 bool attached[NUM_CHANNELS];
@@ -45,20 +37,6 @@ void ensureAttached(uint8_t ch) {
   Serial.print("Ch ");
   Serial.print(ch);
   Serial.println(" initialized.");
-}
-
-void IK(float x, float z, float* theta2, float* theta3) {
-  float L12 = sqrtf(x * x + z * z);
-
-  float theta12 = acos((L1 * L1 + L2 * L2 - L12 * L12) / (2 * L1 * L2));
-
-  *theta3 = KNEE_SERVO_CALIB_SLOPE * (180 - degrees(theta12)) + KNEE_SERVO_CALIB_INTERCEPT;
-
-  float alpha1 = atan(x / z);
-
-  float gamma1 = asin((sin(theta12) * L2) / L12);
-
-  *theta2 = HIP_SERVO_CALIB_SLOPE * (90 - (degrees(gamma1) + degrees(alpha1))) + HIP_SERVO_CALIB_INTERCEPT;
 }
 
 void setup() {
@@ -92,12 +70,12 @@ void handleSerial() {
         } else {
           float theta2, theta3;
           if (inputLine == "home") {
-            IK(HOME_X, HOME_Z, &theta2, &theta3);
+            IK(HOME_X, HOME_Z, &theta2, &theta3, legCalibrations[1]);
           } else {
             float x = inputLine.substring(0, commaIdx).toFloat();
             float z = inputLine.substring(commaIdx + 1).toFloat();
 
-            IK(x, z, &theta2, &theta3);
+            IK(x, z, &theta2, &theta3, legCalibrations[1]);
           }
 
           if (isnan(theta2) || isnan(theta3)) {
