@@ -8,6 +8,7 @@ ACCEPTS COORDINATES IN THE FORMAT "x,z" (WITHOUT QUOTES) OVER SERIAL
 #define USE_PCA9685_SERVO_EXPANDER
 #include <ServoEasing.hpp>
 #include <Wire.h>
+#include <Adafruit_PWMServoDriver.h>
 #include <math.h>
 #include <Arduino.h>
 #include "config.h"
@@ -65,7 +66,7 @@ void handleSerial() {
       inputLine.trim();
       if (inputLine.length() > 0) {
         int commaIdx = inputLine.indexOf(',');
-        if (commaIdx < 0 || inputLine != "home") {
+        if (commaIdx < 0 && inputLine != "home") {
           Serial.println("Format: x,z");
         } else {
           float theta2, theta3;
@@ -75,7 +76,7 @@ void handleSerial() {
             float x = inputLine.substring(0, commaIdx).toFloat();
             float z = inputLine.substring(commaIdx + 1).toFloat();
 
-            IK(x, z, &theta2, &theta3, legCalibrations[1]);
+            IKParallelogram(x, z, 35, -22.0857, &theta2, &theta3, legCalibrations[1]);
           }
 
           if (isnan(theta2) || isnan(theta3)) {
@@ -84,14 +85,14 @@ void handleSerial() {
             float hipServo = theta2;
             float kneeServo = theta3;
 
-            ensureAttached(0);
             ensureAttached(1);
+            ensureAttached(2);
 
             int hipTargetApi = physToApi((int)hipServo);
             int kneeTargetApi = physToApi((int)kneeServo);
 
-            ServoEasing::ServoEasingArray[0]->setEaseTo(hipTargetApi);
-            ServoEasing::ServoEasingArray[1]->setEaseTo(kneeTargetApi);
+            servos[1]->setEaseTo(hipTargetApi);
+            servos[2]->setEaseTo(kneeTargetApi);
 
             setEaseToForAllServosSynchronizeAndStartInterrupt();
 
